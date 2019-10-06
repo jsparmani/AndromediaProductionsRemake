@@ -22,5 +22,6 @@ admin.site.index_title = "Welcome to Andromedia Productions"
 
 urlpatterns = [
     path('control-panel/', admin.site.urls),
-    path('user/', include('user.urls'))
+    path('user/', include('user.urls')),
+    path('video/', include('video.urls')),
 ]
