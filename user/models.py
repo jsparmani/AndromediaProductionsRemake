@@ -48,3 +48,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+
+class UploadingUser(models.Model):
+
+    user = models.OneToOneField(
+        'User', on_delete=models.CASCADE, related_name='uploadingusers')
+
+    channel_id = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.user.email}--{self.channel_id}'

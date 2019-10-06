@@ -21,6 +21,6 @@ admin.site.site_title = "Andromedia Productions Portal"
 admin.site.index_title = "Welcome to Andromedia Productions"
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('control-panel/', admin.site.urls),
     path('user/', include('user.urls'))
 ]

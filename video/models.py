@@ -4,8 +4,8 @@ from django.conf import settings
 
 class Video(models.Model):
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             on_delete=models.CASCADE)
+    uploading_user = models.ForeignKey('user.UploadingUser',
+                                       on_delete=models.CASCADE)
     video_id = models.CharField(max_length=255, blank=False)
     image_url = models.URLField(blank=False)
     like = models.PositiveIntegerField(default=0)
