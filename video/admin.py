@@ -35,11 +35,21 @@ class PlaylistAdmin(admin.ModelAdmin):
                 request, obj, form, change)
             try:
 
-                res = youtube.playlistItems().list(playlistId=obj.playlist_id,
-                                                   part='contentDetails').execute()
                 video_ids = []
-                for item in res['items']:
-                    video_ids.append(item['contentDetails']['videoId'])
+                next_page_token = None
+
+                while(True):
+
+                    res = youtube.playlistItems().list(playlistId=obj.playlist_id,
+                                                       part='contentDetails',  maxResults=50, pageToken=next_page_token).execute()
+
+                    for item in res['items']:
+                        video_ids.append(item['contentDetails']['videoId'])
+                    next_page_token = res.get('nextPageToken')
+
+                    if next_page_token is None:
+                        break
+
                 for video in video_ids:
                     models.Video.objects.create(
                         uploading_user=uploading_user,
@@ -47,6 +57,7 @@ class PlaylistAdmin(admin.ModelAdmin):
                         image_url=f'https://img.youtube.com/vi/{video}/sddefault.jpg',
                         playlist=obj
                     )
+                print(video_ids)
             except:
                 messages.set_level(request, messages.ERROR)
                 messages.error(

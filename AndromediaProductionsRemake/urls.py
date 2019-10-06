@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from . import views
 
 admin.site.site_header = "Andromedia Productions"
 admin.site.site_title = "Andromedia Productions Portal"
@@ -24,4 +25,6 @@ urlpatterns = [
     path('control-panel/', admin.site.urls),
     path('user/', include('user.urls')),
     path('video/', include('video.urls')),
+    path('', views.home, name='home'),
+    path('play-video/<str:video_id>/', views.video_play, name='video_play')
 ]

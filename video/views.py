@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from apiclient.discovery import build
 from . import models
+from django.views import generic
 # Create your views here.
 
 
@@ -10,6 +11,7 @@ def import_all(request, channel_id):
     youtube = build('youtube', 'v3', developerKey=api_key)
     res = youtube.channels().list(id=channel_id, part='contentDetails').execute()
     playlist_id = res['items'][0]['contentDetails']['relatedPlaylists']['uploads']
+    print(playlist_id)
 
     videos = []
     next_page_token = None
@@ -36,3 +38,25 @@ def import_all(request, channel_id):
             continue
 
     return redirect('admin:video_video_changelist')
+
+
+class ChannelVideosView(generic.ListView):
+    context_object_name = 'videos'
+    template_name = 'video/videos_channel.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        qs = models.Video.objects.all().filter(
+            uploading_user__channel_id__exact=self.kwargs['channel_id'])
+        return qs
+
+
+class PlaylistVideosView(generic.ListView):
+    context_object_name = 'videos'
+    template_name = 'video/videos_channel.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        qs = models.Video.objects.all().filter(
+            playlist__playlist_id__exact=self.kwargs['playlist_id'])
+        return qs

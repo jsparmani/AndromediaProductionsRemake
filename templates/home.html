@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+Playlists <br>
+{% for p in playlists %}
+<a href={% url 'video:video_playlist' playlist_id=p.playlist_id %}><li>{{p.name}}</li></a>
+{% endfor %}
+Channel Name: <a href={% url 'video:video_channel' channel_id=channel_id %}>Traversy Media</a>
+<br>
+{% for video in videos %}
+<a href="{% url 'video_play' video_id=video.video_id %}" target="_blank">
+    <img src={{video.image_url}} height="100" width="100"/>
+</a>
+{% endfor %}
+{% endblock content %}
